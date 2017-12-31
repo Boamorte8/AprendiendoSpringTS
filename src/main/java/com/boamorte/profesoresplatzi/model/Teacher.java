@@ -37,7 +37,6 @@ public class Teacher implements Serializable {
 
 	public Teacher() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Teacher(String name, String avatar) {

@@ -34,7 +34,6 @@ public class TeacherSocialMedia implements Serializable {
 
 	public TeacherSocialMedia() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public TeacherSocialMedia(Teacher teacher, SocialMedia socialmedia, String nickname) {

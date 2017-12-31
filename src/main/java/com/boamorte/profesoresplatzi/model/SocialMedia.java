@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="social_media")
 public class SocialMedia implements Serializable {
@@ -30,12 +32,12 @@ public class SocialMedia implements Serializable {
 	
 	@OneToMany
 	@JoinColumn(name="id_social_media")
+	@JsonIgnore
 	private Set<TeacherSocialMedia> teacherSocialMedias;
 	
 
 	public SocialMedia() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public SocialMedia(String name, String icon) {

@@ -1,10 +1,10 @@
-package com.boamorte.profesoresplatzi.dao;
+package com.boamorte.profesoresplatzi.service;
 
 import java.util.List;
 
 import com.boamorte.profesoresplatzi.model.Teacher;
 
-public interface TeacherDao {
+public interface TeacherService {
 
 	void saveTeacher(Teacher teacher);
 	

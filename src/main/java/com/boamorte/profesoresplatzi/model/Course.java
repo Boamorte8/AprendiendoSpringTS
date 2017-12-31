@@ -36,7 +36,6 @@ public class Course implements Serializable {
 
 	public Course() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Course(String name, String themes, String project) {
