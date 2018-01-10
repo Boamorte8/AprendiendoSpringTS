@@ -108,7 +108,7 @@ public class SocialMediaController {
 			return new ResponseEntity(new CustomErrorType("IdSocialMedia and socialMedia is required"), HttpStatus.CONFLICT);
 		}
 		
-		SocialMedia currentSocialMedia = _socialMediaService.findByName(socialMedia.getName());
+		SocialMedia currentSocialMedia = _socialMediaService.findById(idSocialMedia);
 		if (currentSocialMedia == null) {
 			return new ResponseEntity(new CustomErrorType("No exist that social media"), HttpStatus.NO_CONTENT);
 		}

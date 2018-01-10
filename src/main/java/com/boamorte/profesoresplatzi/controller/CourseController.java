@@ -105,7 +105,7 @@ public class CourseController {
 			return new ResponseEntity(new CustomErrorType("IdCourse and course is required"), HttpStatus.CONFLICT);
 		}
 		
-		Course currentCourse = _courseService.findByName(course.getName());
+		Course currentCourse = _courseService.findById(idCourse);
 		if (currentCourse == null) {
 			return new ResponseEntity(new CustomErrorType("No exist that course"), HttpStatus.NO_CONTENT);
 		}
