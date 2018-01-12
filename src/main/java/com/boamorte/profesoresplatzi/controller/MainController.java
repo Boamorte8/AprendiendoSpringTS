@@ -13,4 +13,11 @@ public class MainController {
 		String response = "Bienvenido a la primera API Rest de Boamorte88 :)";
 		return response;
 	}
+	
+	@RequestMapping("/error404")
+	@ResponseBody
+	public String error() {
+		String response = "Tenemos problemas, alguien se nos metió al chuzo :)";
+		return response;
+	}
 }

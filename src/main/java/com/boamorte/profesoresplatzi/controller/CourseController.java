@@ -44,16 +44,17 @@ public class CourseController {
 	
 	//GET
 	@RequestMapping(value="/courses", method = RequestMethod.GET, headers = "Accept=application/json")
-	public ResponseEntity<List<Course>> getCourses(@RequestParam(value="name", required=false) String name) {
+	public ResponseEntity<List<Course>> getCourses(@RequestParam(value="name", required=false) String name, @RequestParam(value = "id_teacher",required = false) Long id_teacher) {
 		List<Course> courses = new ArrayList<>();
-			
-		if (name == null) {
-			courses = _courseService.findAllCourse();
+		
+		if (id_teacher != null) {
+			courses = _courseService.findByTeacher(id_teacher);
 			if (courses.isEmpty()) {
-				return new ResponseEntity(HttpStatus.NO_CONTENT);
-			}
-			return new ResponseEntity<List<Course>>(courses, HttpStatus.OK);
-		} else {
+	            return new ResponseEntity(HttpStatus.NO_CONTENT);
+	        }
+		}
+		
+		if (name != null) {
 			Course course = _courseService.findByName(name);
 			if (course == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -61,9 +62,17 @@ public class CourseController {
 			courses.add(course);
 			return new ResponseEntity<List<Course>>(courses, HttpStatus.OK);
 		}	
+		
+		if (name == null && id_teacher == null) {
+			courses = _courseService.findAllCourse();
+			if (courses.isEmpty()) {
+				return new ResponseEntity(HttpStatus.NO_CONTENT);
+			}
+		} 
+		return new ResponseEntity<List<Course>>(courses, HttpStatus.OK);
 	}
 	
-	//GET
+	//GET BY ID
 	@RequestMapping(value="/courses/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public ResponseEntity<Course> getCourseById(@PathVariable("id") Long idCourse) {
 		if (validateIdCourse(idCourse) == false) {
@@ -80,14 +89,15 @@ public class CourseController {
 	@RequestMapping(value="/courses", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<?> createCourse(@RequestBody Course course, UriComponentsBuilder uriComponentsBuilder) {
 		if (validateCourse(course) == false) {
-			return new ResponseEntity(new CustomErrorType("SocialMedia is required"), HttpStatus.CONFLICT);
+			return new ResponseEntity(new CustomErrorType("Course is required"), HttpStatus.CONFLICT);
 		}
 		
 		if (_courseService.findByName(course.getName()) != null) {
-			return new ResponseEntity(new CustomErrorType("No exist that course"), HttpStatus.NO_CONTENT);
+			return new ResponseEntity(new CustomErrorType("A course with name " + course.getName() + "already exist"), HttpStatus.NO_CONTENT);
 		}
 		
 		_courseService.saveCourse(course);
+		
 		Course courseCreated = _courseService.findByName(course.getName());
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(
@@ -107,12 +117,14 @@ public class CourseController {
 		
 		Course currentCourse = _courseService.findById(idCourse);
 		if (currentCourse == null) {
-			return new ResponseEntity(new CustomErrorType("No exist that course"), HttpStatus.NO_CONTENT);
+			return new ResponseEntity(new CustomErrorType("Unable to upate. Social Media with id " + idCourse + " not found."), HttpStatus.NO_CONTENT);
 		}
+		
 		currentCourse.setName(course.getName());
 		currentCourse.setTeacher(course.getTeacher());
 		currentCourse.setProject(course.getProject());
 		currentCourse.setThemes(course.getThemes());
+		
 		_courseService.updateCourse(currentCourse);
 		return new ResponseEntity<Course>(currentCourse, HttpStatus.OK);
 	}
@@ -126,7 +138,7 @@ public class CourseController {
 		
 		Course currentCourse = _courseService.findById(idCourse);
 		if (currentCourse == null) {
-			return new ResponseEntity(new CustomErrorType("No exist that course"), HttpStatus.NO_CONTENT);
+			return new ResponseEntity(new CustomErrorType("Unable to delete. course with id " + idCourse + " not found."), HttpStatus.NO_CONTENT);
 		}
 		_courseService.deleteCourse(idCourse);
 		return new ResponseEntity<Course>(HttpStatus.OK);

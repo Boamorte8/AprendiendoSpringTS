@@ -45,9 +45,16 @@ public class TeacherDaoImpl extends AbstractSession implements TeacherDao {
 	@Override
 	public void deleteTeacher(Long idTeacher) {
 		try {
-			Teacher teacher = findById(idTeacher);
-			if (teacher != null) {
-				getSession().delete(teacher);
+			Teacher teacherResponse = findById(idTeacher);
+			if (teacherResponse != null) {
+				Iterator<TeacherSocialMedia> iterator = teacherResponse.getTeacherSocialMedias().iterator();
+				while(iterator.hasNext()) {
+					TeacherSocialMedia teacherSocialMedia = iterator.next();
+					iterator.remove();
+					getSession().delete(teacherSocialMedia);
+				}
+				teacherResponse.getTeacherSocialMedias().clear();
+				getSession().delete(teacherResponse);
 			}
 		} catch(Exception e) {
 			System.out.println("Error al borrar teacher: " + e.getMessage());
