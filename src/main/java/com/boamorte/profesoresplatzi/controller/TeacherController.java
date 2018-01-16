@@ -108,7 +108,7 @@ public class TeacherController {
 	}
 	
 	//POST IMAGE
-	@RequestMapping(value="/teachers/image", method = RequestMethod.POST, headers = ("content-type=multipart/form-data"))
+	@RequestMapping(value="/teachers/images", method = RequestMethod.POST, headers = ("content-type=multipart/form-data"))
 	public ResponseEntity<byte[]> uploadTeacherImage(@RequestParam("id_teacher") Long idTeacher, 
 			@RequestParam("file") MultipartFile multipartFile, UriComponentsBuilder componentsBuilder) {
 		if (null == idTeacher) {
@@ -152,6 +152,67 @@ public class TeacherController {
 			return new ResponseEntity(new CustomErrorType("Error during upload avatar image: " + multipartFile.getOriginalFilename()), HttpStatus.NO_CONTENT);
 		}
 	}
+	
+	//GET IMAGE
+	@RequestMapping(value="/teachers/{id_teacher}/images", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> getTeacherImage(@PathVariable("id_teacher") Long idTeacher){
+		if (null == idTeacher) {
+			 return new ResponseEntity(new CustomErrorType("id_teacher is required, please set it "), HttpStatus.NO_CONTENT);
+		}
+		
+		Teacher teacher = _teacherService.findById(idTeacher);
+		if (null == teacher) {
+			return new ResponseEntity(new CustomErrorType("Teacher with id_teacher: " + idTeacher + " not found"), HttpStatus.NOT_FOUND);
+		}
+		
+		try {
+			
+			String fileName = teacher.getAvatar();
+			Path path = Paths.get(fileName);
+			File f = path.toFile();
+			if (!f.exists()) {
+				return new ResponseEntity(new CustomErrorType("Image not found"),HttpStatus.CONFLICT);
+			}
+			
+			byte[] image = Files.readAllBytes(path);
+			return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(new CustomErrorType("Error to show image"),HttpStatus.CONFLICT);
+		}
+	
+	}
+	
+	//DELETE IMAGE
+	@RequestMapping(value="/teachers/{id_teacher}/images", method = RequestMethod.DELETE, headers = ("Accept=application/json"))
+	public ResponseEntity<?> deleteTeacherImaga(@PathVariable("id_teacher") Long idTeacher) {
+		if (null == idTeacher) {
+			 return new ResponseEntity(new CustomErrorType("id_teacher is required, please set it "), HttpStatus.NO_CONTENT);
+		}
+		
+		Teacher teacher = _teacherService.findById(idTeacher);
+		if (null == teacher) {
+			return new ResponseEntity(new CustomErrorType("Teacher with id_teacher: " + idTeacher + " not found"), HttpStatus.NOT_FOUND);
+		}
+		
+		if (teacher.getAvatar().isEmpty() || teacher.getAvatar() == null) {
+			return new ResponseEntity(new CustomErrorType("This Teacher doesn`t have image assigned"), HttpStatus.NOT_FOUND);
+		}
+		
+		String fileName = teacher.getAvatar();
+		Path path = Paths.get(fileName);
+		File file = path.toFile();
+		if (file.exists()) {
+			file.delete();
+		}
+		
+		teacher.setAvatar("");
+		_teacherService.updateTeacher(teacher);
+		
+		return new ResponseEntity<Teacher> (HttpStatus.OK);
+	}
+
 	
 	//UPDATE
 	@RequestMapping(value="/teachers/{id}", method = RequestMethod.PATCH, headers = "Accept=application/json")
