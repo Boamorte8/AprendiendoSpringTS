@@ -22,4 +22,6 @@ public interface SocialMediaDao {
 	SocialMedia findByName(String name);
 	
 	TeacherSocialMedia findByIdAndName(Long idSocialMedia, String nickname);
+	
+	TeacherSocialMedia findSocialMediaByIdTeacherAndIdSocialMedia(Long idTeacher, Long idSocialMedia);
 }

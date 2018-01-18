@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,9 +35,8 @@ public class Teacher implements Serializable {
 	@JsonIgnore
 	private Set<Course> courses;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="id_teacher")
-	@JsonIgnore
 	private Set<TeacherSocialMedia> teacherSocialMedias;
 
 	public Teacher() {

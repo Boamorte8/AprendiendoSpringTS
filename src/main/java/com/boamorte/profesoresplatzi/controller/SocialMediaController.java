@@ -191,20 +191,20 @@ public class SocialMediaController {
 	}
 	
 	//GET IMAGE
-	@RequestMapping(value="/teachers/{id_teacher}/images", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> getTeacherImage(@PathVariable("id_teacher") Long idTeacher){
-		if (null == idTeacher) {
-			return new ResponseEntity(new CustomErrorType("id_teacher is required, please set it "), HttpStatus.NO_CONTENT);
+	@RequestMapping(value="/socialMedias/{id_social_media}/images", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> getSocialMediaImage(@PathVariable("id_social_media") Long idSocialMedia){
+		if (null == idSocialMedia) {
+			return new ResponseEntity(new CustomErrorType("id_social_media is required, please set it "), HttpStatus.NO_CONTENT);
 		}
 		
-		Teacher teacher = _teacherService.findById(idTeacher);
-		if (null == teacher) {
-			return new ResponseEntity(new CustomErrorType("Teacher with id_teacher: " + idTeacher + " not found"), HttpStatus.NOT_FOUND);
+		SocialMedia socialMedia = _socialMediaService.findById(idSocialMedia);
+		if (null == socialMedia) {
+			return new ResponseEntity(new CustomErrorType("No exist social media with id: " + idSocialMedia), HttpStatus.NO_CONTENT);
 		}
 		
 		try {
 			
-			String fileName = teacher.getAvatar();
+			String fileName = socialMedia.getIcon();
 			Path path = Paths.get(fileName);
 			File f = path.toFile();
 			if (!f.exists()) {
@@ -222,32 +222,32 @@ public class SocialMediaController {
 	}
 	
 	//DELETE IMAGE
-	@RequestMapping(value="/teachers/{id_teacher}/images", method = RequestMethod.DELETE, headers = ("Accept=application/json"))
-	public ResponseEntity<?> deleteTeacherImaga(@PathVariable("id_teacher") Long idTeacher) {
-		if (null == idTeacher) {
-			return new ResponseEntity(new CustomErrorType("id_teacher is required, please set it "), HttpStatus.NO_CONTENT);
+	@RequestMapping(value="/socialMedias/{id_social_media}/images", method = RequestMethod.DELETE, headers = ("Accept=application/json"))
+	public ResponseEntity<?> deleteSocialMediaImage(@PathVariable("id_social_media") Long idSocialMedia) {
+		if (null == idSocialMedia) {
+			return new ResponseEntity(new CustomErrorType("id_social_media is required, please set it "), HttpStatus.NO_CONTENT);
 		}
 		
-		Teacher teacher = _teacherService.findById(idTeacher);
-		if (null == teacher) {
-			return new ResponseEntity(new CustomErrorType("Teacher with id_teacher: " + idTeacher + " not found"), HttpStatus.NOT_FOUND);
+		SocialMedia socialMedia = _socialMediaService.findById(idSocialMedia);
+		if (null == socialMedia) {
+			return new ResponseEntity(new CustomErrorType("No exist social media with id: " + idSocialMedia), HttpStatus.NO_CONTENT);
 		}
 		
-		if (teacher.getAvatar().isEmpty() || teacher.getAvatar() == null) {
-			return new ResponseEntity(new CustomErrorType("This Teacher doesn`t have image assigned"), HttpStatus.NOT_FOUND);
+		if (socialMedia.getIcon().isEmpty() || socialMedia.getIcon() == null){
+			return new ResponseEntity(new CustomErrorType("This social media doesn`t have image assigned"), HttpStatus.NOT_FOUND);
 		}
 		
-		String fileName = teacher.getAvatar();
+		String fileName = socialMedia.getIcon();
 		Path path = Paths.get(fileName);
 		File file = path.toFile();
 		if (file.exists()) {
 			file.delete();
 		}
 		
-		teacher.setAvatar("");
-		_teacherService.updateTeacher(teacher);
+		socialMedia.setIcon("");;
+		_socialMediaService.updateSocialMedia(socialMedia);
 		
-		return new ResponseEntity<Teacher> (HttpStatus.OK);
+		return new ResponseEntity<SocialMedia> (HttpStatus.OK);
 	}
 }
 
