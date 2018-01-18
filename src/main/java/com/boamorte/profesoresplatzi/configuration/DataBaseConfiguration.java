@@ -30,9 +30,11 @@ public class DataBaseConfiguration {
 	public DataSource datasource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/platziprofesores");
-		dataSource.setUsername("platziteacher");
-		dataSource.setPassword("Platzi88profesores.");
+		dataSource.setUrl("jdbc:mysql://us-cdbr-iron-east-05.cleardb.net/heroku_2b12458ebca6b56");
+		dataSource.setUsername("b76ce240057474");
+		dataSource.setPassword("6e4771a1");
+//		dataSource.setUsername("platziteacher");
+//		dataSource.setPassword("Platzi88profesores.");
 		
 		return dataSource;
 	}
