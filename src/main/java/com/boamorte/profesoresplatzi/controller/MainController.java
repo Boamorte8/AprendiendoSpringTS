@@ -10,14 +10,15 @@ public class MainController {
 	@RequestMapping("/")
 	@ResponseBody
 	public String index() {
-		String response = "Bienvenido a la primera API Rest de Boamorte88 :)";
+		String response = "Bienvenido a la primera API Rest de Boamorte88 :)   Para continuar debe loguearse para utilizar la API";
 		return response;
 	}
 	
 	@RequestMapping("/error404")
 	@ResponseBody
 	public String error() {
-		String response = "Tenemos problemas, alguien se nos metió al chuzo :)";
+		String response = "Tenemos problemas, alguien se nos metió al chuzo. Intenta mas tarde mientras sacamos al intruso :)";
 		return response;
 	}
+	
 }
